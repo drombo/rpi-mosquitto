@@ -15,4 +15,3 @@ RUN  chmod a+x /usr/local/sbin/*
 RUN apk --no-cache add --update mosquitto libressl
 
 CMD /srv/runmosquitto.sh
-
