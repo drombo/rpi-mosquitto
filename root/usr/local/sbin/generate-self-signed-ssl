@@ -1,28 +1,38 @@
 #!/bin/sh
 # generate self signed ssl cert only if all cert files are empty or nonexistent
 
-CERT_HOSTNAME=$0
 
-if [ -s /etc/ssl/ssl.crt ] || [ -s /etc/ssl/cert.pem ] || [ -s /etc/ssl/key.pem ] || [ -n "${SKIP_SSL_GENERATE}" ]; then
+if [ -s /etc/ssl/mosquitto.crt.pem ] || [ -n "${SKIP_SSL_GENERATE}" ]; then
     echo "Skipping SSL certificate generation"
 else
-    echo "Generating self-signed certificate"
-
     mkdir -p /etc/ssl
     cd /etc/ssl
 
-    # Generating signing SSL private key
-    openssl genrsa -des3 -passout pass:x -out key.pem 2048
+    # taken from https://docs.docker.com/engine/swarm/secrets/#intermediate-example-use-secrets-with-a-nginx-service
 
-    # Removing passphrase from private key
-    cp key.pem key.pem.orig
-    openssl rsa -passin pass:x -in key.pem.orig -out key.pem
+    echo "First generating ca certificate"
 
-    # Generating certificate signing request
-    openssl req -new -key key.pem -out cert.csr -subj "CN=${CERT_HOSTNAME}"
+    openssl genrsa -out "root-ca.key" 4096
 
-    # Generating self-signed certificate
-    openssl x509 -req -days 3650 -in cert.csr -signkey key.pem -out cert.pem
+    openssl req \
+        -new -key "root-ca.key" \
+        -out "root-ca.csr" -sha256 \
+        -subj '/CN=Mosquitto Root CA'
+
+    openssl x509 -req  -days 3650  -in "root-ca.csr" \
+        -signkey "root-ca.key" -sha256 -out "root-ca.crt.pem" \
+        -extfile "root-ca.cnf" -extensions \
+        root_ca
+
+    echo "Now generating mosquitto certificates"
+
+    openssl genrsa -out "mosquitto.key.pem" 4096
+
+    openssl req -new -key "mosquitto.key.pem" -out "mosquitto.csr" -sha256 \
+        -subj "/CN=${CERT_HOSTNAME}"
+
+    openssl x509 -req -days 750 -in "mosquitto.csr" -sha256 \
+        -CA "root-ca.crt.pem" -CAkey "root-ca.key"  -CAcreateserial \
+        -out "mosquitto.crt.pem" -extfile "site.cnf" -extensions server
 
 fi
-
