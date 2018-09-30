@@ -8,7 +8,7 @@ EXPOSE 1883 9001
 
 COPY config /tmp/mosquitto/config
 COPY run.sh /srv/runmosquitto.sh
-COPY  root /
+COPY root /
 RUN  chmod a+x /usr/local/sbin/*
 
 # Install packages
