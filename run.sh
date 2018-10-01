@@ -4,7 +4,7 @@ set -e
 
 mkdir -p /srv/mosquitto/data /srv/mosquitto/config /srv/mosquitto/log
 
-#/root/usr/local/sbin/generate-self-signed-ssl
+/root/usr/local/sbin/generate-self-signed-ssl
 
 cp -au /tmp/mosquitto/config/* /srv/mosquitto/config/
 

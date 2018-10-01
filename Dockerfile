@@ -4,7 +4,7 @@ LABEL maintainer="Sebastian Breit <sebastian.breit@drombo.de>"
 
 VOLUME ["/srv/mosquitto"]
 
-EXPOSE 1883 9001
+EXPOSE 1883 9001 8883
 
 COPY config /tmp/mosquitto/config
 COPY run.sh /srv/runmosquitto.sh

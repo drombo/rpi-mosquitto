@@ -33,6 +33,6 @@ else
 
     openssl x509 -req -days 750 -in "mosquitto.csr" -sha256 \
         -CA "root-ca.crt.pem" -CAkey "root-ca.key"  -CAcreateserial \
-        -out "mosquitto.crt.pem" -extfile "site.cnf" -extensions server
+        -out "mosquitto.crt.pem" -extfile "server.cnf" -extensions server
 
 fi
