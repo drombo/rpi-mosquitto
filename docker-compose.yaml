@@ -2,6 +2,7 @@ version: '3'
 
 services:
     mosquitto:
+        hostname: mqtt
         build:
           context: .
           dockerfile: Dockerfile
