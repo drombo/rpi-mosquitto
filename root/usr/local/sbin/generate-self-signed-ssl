@@ -2,10 +2,9 @@
 # generate self signed ssl cert only if all cert files are empty or nonexistent
 
 
-if [ -s /etc/ssl/mosquitto.crt.pem ] || [ -n "${SKIP_SSL_GENERATE}" ]; then
+if [ -s /srv/mosquitto/ssl/mosquitto.crt.pem ] || [ -n "${SKIP_SSL_GENERATE}" ]; then
     echo "Skipping SSL certificate generation"
 else
-    mkdir -p /etc/ssl
     cd /etc/ssl
 
     # taken from https://docs.docker.com/engine/swarm/secrets/#intermediate-example-use-secrets-with-a-nginx-service
@@ -35,4 +34,5 @@ else
         -CA "root-ca.crt.pem" -CAkey "root-ca.key"  -CAcreateserial \
         -out "mosquitto.crt.pem" -extfile "server.cnf" -extensions server
 
+    cp mosquitto.crt.pem root-ca.crt.pem mosquitto.key.pem /srv/mosquitto/ssl/
 fi

@@ -2,7 +2,7 @@
 
 set -e
 
-mkdir -p /srv/mosquitto/data /srv/mosquitto/config /srv/mosquitto/log
+mkdir -p /srv/mosquitto/data /srv/mosquitto/config /srv/mosquitto/log /srv/mosquitto/ssl
 
 /usr/local/sbin/generate-self-signed-ssl
 
