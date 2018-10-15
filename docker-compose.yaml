@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+    mosquitto:
+        build:
+          context: .
+          dockerfile: Dockerfile
+        networks:
+            - default
+        ports:
+            - 1883:1883
+            - 8883:8883
+            - 9001:9001
+        volumes:
+            - mosquitto:/srv/mosquitto
+        environment:
+            # external host name for ssl cert
+            - CERT_HOSTNAME
+
+volumes:
+    mosquitto:              

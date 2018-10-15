@@ -1,5 +1,6 @@
 # Pull base image
-FROM armhf/alpine
+#FROM armhf/alpine
+FROM resin/amd64-alpine
 LABEL maintainer="Sebastian Breit <sebastian.breit@drombo.de>"
 
 VOLUME ["/srv/mosquitto"]
